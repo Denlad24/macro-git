@@ -1,0 +1,32 @@
+{
+  "name": "rich-body-macro-custom-config-editor-sample",
+  "version": "1.0.32",
+  "license": "SEE LICENSE IN /LICENSE",
+  "private": true,
+  "scripts": {
+    "lint": "eslint src/",
+    "build": "npm run build:frame && npm run build:custom-config && npm run build:custom-ui",
+    "build:frame": "cd src/resources/html-frame && vite build",
+    "build:custom-config": "cd src/resources/custom-ui-config && vite build",
+    "build:custom-ui": "cd src/custom-ui && vite build"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react-hooks": "^4.6.0"
+  },
+  "dependencies": {
+    "@atlaskit/adf-utils": "^19.14.0",
+    "@atlaskit/css-reset": "^6.11.2",
+    "@atlaskit/renderer": "^120.1.2",
+    "@forge/bridge": "^4.5.0",
+    "@forge/react": "^11.2.6-next.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite": "^6.3.4"
+  },
+  "overrides": {
+    "react-dom": "^18.3.1",
+    "react": "^18.3.1"
+  }
+}

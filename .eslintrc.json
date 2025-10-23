@@ -1,0 +1,15 @@
+{
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2023,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["react-hooks"],
+  "extends": ["plugin:import/recommended"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "import/no-extraneous-dependencies": "error"
+  }
+}
