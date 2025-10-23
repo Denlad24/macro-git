@@ -8,14 +8,7 @@ export const useSubmit = () => {
 
   const submit = async (fields) => {
     const payload = {
-      config: fields,
-      body: doc(
-        paragraph(
-          placeholder({
-            text: "Here is some placeholder content!",
-          })
-        )
-      ),
+      config: fields
     };
 
     try {

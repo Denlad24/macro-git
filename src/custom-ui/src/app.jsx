@@ -6,7 +6,7 @@ export function CustomUIApp() {
     const [links, setLinks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-
+    let linksList;
     useEffect(() => {
         async function loadConfigAndData() {
             try {
@@ -29,23 +29,10 @@ export function CustomUIApp() {
                     const webuiLinks = data.results.map(item => item.source._links.webui);
                     const baseLink = data._links.base;
 
-                    let linksList = data.results.map((item, index) => ({
+                    linksList = data.results.map((item, index) => ({
                         title: titles[index],
                         url: baseLink + webuiLinks[index]
                     }));
-
-                    // Filter by spaces
-                    if (cfg.spaces && cfg.spaces.length > 0) {
-                        linksList = linksList.filter(link => {
-                            const match = link.url.match(/\/spaces\/([^/]+)/);
-                            if (!match) return !cfg.isWhitelist;
-                            const spaceValue = match[1];
-                            const isInList = cfg.spaces.includes(spaceValue);
-                            return cfg.isWhitelist ? isInList : !isInList;
-                        });
-                    }
-
-                    setLinks(linksList);
                 } else {
                     response = await requestConfluence(
                         `/wiki/rest/api/relation/link/from/content/${context.extension.content.id}/to/content?expand=target`,
@@ -56,25 +43,39 @@ export function CustomUIApp() {
                     const webuiLinks = data.results.map(item => item.target._links.webui);
                     const baseLink = data._links.base;
 
-                    let linksList = data.results.map((item, index) => ({
+                    linksList = data.results.map((item, index) => ({
                         title: titles[index],
                         url: baseLink + webuiLinks[index]
                     }));
-
-                    // Filter by spaces
-                    if (cfg.spaces && cfg.spaces.length > 0) {
-                        linksList = linksList.filter(link => {
-                            const match = link.url.match(/\/spaces\/([^/]+)/);
-                            if (!match) return !cfg.isWhitelist;
-                            const spaceValue = match[1];
-                            const isInList = cfg.spaces.includes(spaceValue);
-                            return cfg.isWhitelist ? isInList : !isInList;
-                        });
-                    }
-
-                    setLinks(linksList);
                 }
 
+                if (cfg.spaces?.length) {
+                    // Helper function to normalize space values (uppercase + trim)
+                    const normalizeSpace = (value) => value?.toUpperCase().trim();
+
+                    // Normalize all spaces in the list for case-insensitive comparison
+                    const normalizedSpaces = cfg.spaces.map(normalizeSpace);
+
+                    linksList = linksList.filter(link => {
+                        // Extract the space identifier from the URL
+                        const match = link.url.match(/\/spaces\/([^/]+)/);
+                        const spaceValue = match?.[1].toUpperCase();
+
+                        // Determine if the link belongs to one of the listed spaces
+                        const isInList = spaceValue ? normalizedSpaces.includes(spaceValue) : false;
+                        if (cfg.isWhitelist) {
+                            // In whitelist mode → keep only matching links
+                            return isInList;
+                        } else {
+                            // In blacklist mode → remove matching links, keep the rest
+                            return !isInList;
+                        }
+                    });
+                }
+
+                setLinks(linksList)
+
+                setLinks(linksList)
                 setLoading(false);
             } catch (err) {
                 console.error('Error loading data:', err);
@@ -83,7 +84,7 @@ export function CustomUIApp() {
         }
 
         loadConfigAndData();
-    }, [config]);
+    }, []);
 
     if (loading) {
         return <div style={styles.loading}>Loading links...</div>;

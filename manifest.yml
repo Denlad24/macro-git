@@ -1,31 +1,11 @@
 modules:
   macro:
-    - key: rich-text-macro
-      resource: ui-kit-macro
-      title: Rich text macro (no config)
-      description: Basic rich text macro
-      render: native
-      layout: bodied
-      adfExport:
-        function: export-macro
-    - key: rich-text-ui-kit-config-macro
-      resource: ui-kit-macro
-      title: Rich text macro (with config) UI Kit
-      description: Basic rich text macro with a custom config editor built using UI Kit
-      render: native
-      layout: bodied
-      config:
-        resource: ui-kit-config
-        viewportSize: max
-        render: native
-        title: UI Kit Config Editor
-      adfExport:
-        function: export-macro
     - key: rich-text-custom-ui-config-macro
       resource: custom-ui-macro
       title: Rich text macro (with config) Custom UI
       description: Basic rich text macro with a custom config using custom ui-kit-config
       layout: bodied
+      bodyType: none
       config:
         resource: custom-ui-config
         viewportSize: max
@@ -35,12 +15,8 @@ modules:
     - key: export-macro
       handler: export-macro.adfExport
 resources:
-  - key: ui-kit-macro
-    path: src/ui-kit/index.jsx
   - key: ui-kit-html-frame
     path: src/resources/html-frame/dist
-  - key: ui-kit-config
-    path: src/ui-kit/custom-config.jsx
   - key: custom-ui-config
     path: src/resources/custom-ui-config/dist
   - key: custom-ui-macro
